@@ -9,6 +9,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "~21.2.0-next.1",
     "@angular/common": "^21.1.0-next",
     "@angular/compiler": "^21.1.0-next",
     "@angular/core": "^21.1.0-next",
@@ -23,6 +24,7 @@
     "@angular/build": "^21.1.0-next",
     "@angular/cli": "^21.1.0-next",
     "@angular/compiler-cli": "^21.1.0-next",
+    "@angular/material": "^21.2.0-next.1",
     "@types/node": "^16.11.35",
     "typescript": "~5.9.2"
   }

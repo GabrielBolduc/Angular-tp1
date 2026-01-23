@@ -3,42 +3,63 @@ import {ActivatedRoute} from '@angular/router';
 import {HousingService} from '../housing';
 import {HousingLocationInfo} from '../housinglocation';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+// Imports Material
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+
 @Component({
   selector: 'app-details',
-  imports: [ReactiveFormsModule],
+  standalone: true,
+  imports: [ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   template: `
-    <article>
-      <img
-        class="listing-photo"
-        [src]="housingLocation?.photo"
-        alt="Exterior photo of {{ housingLocation?.name }}"
-        crossorigin
-      />
-      <section class="listing-description">
-        <h2 class="listing-heading">{{ housingLocation?.name }}</h2>
-        <p class="listing-location">{{ housingLocation?.city }}, {{ housingLocation?.state }}</p>
-      </section>
-      <section class="listing-features">
-        <h2 class="section-heading">About this housing location</h2>
-        <ul>
-          <li>Units available: {{ housingLocation?.availableUnits }}</li>
-          <li>Does this location have wifi: {{ housingLocation?.wifi }}</li>
-          <li>Does this location have laundry: {{ housingLocation?.laundry }}</li>
-        </ul>
-      </section>
-      <section class="listing-apply">
-        <h2 class="section-heading">Apply now to live here</h2>
-        <form [formGroup]="applyForm" (submit)="submitApplication()">
-          <label for="first-name">First Name</label>
-          <input id="first-name" type="text" formControlName="firstName" />
-          <label for="last-name">Last Name</label>
-          <input id="last-name" type="text" formControlName="lastName" />
-          <label for="email">Email</label>
-          <input id="email" type="email" formControlName="email" />
-          <button type="submit" class="primary">Apply now</button>
-        </form>
-      </section>
-    </article>
+    <div class="details-container">
+      
+      <mat-card class="listing-card" appearance="outlined">
+        <img mat-card-image [src]="housingLocation?.photo" alt="Photo of {{housingLocation?.name}}">
+        <mat-card-header>
+          <mat-card-title>{{ housingLocation?.name }}</mat-card-title>
+          <mat-card-subtitle>{{ housingLocation?.city }}, {{ housingLocation?.state }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <h2 class="section-heading">About this housing location</h2>
+          
+          <ul>
+            <li>Units available: {{ housingLocation?.availableUnits }}</li>
+            <li>Does this location have wifi: {{ housingLocation?.wifi }}</li>
+            <li>Does this location have laundry: {{ housingLocation?.laundry }}</li>
+          </ul>
+
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="form-card" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>Apply now</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="applyForm" (submit)="submitApplication()" class="apply-form">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input matInput formControlName="firstName">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input matInput formControlName="lastName">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email">
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" type="submit">Apply now</button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
   `,
   styleUrls: ['./details.css'],
 })
