@@ -15,7 +15,7 @@ import {MatIconModule} from '@angular/material/icon';
         </a>
 
         <nav class="auth-nav">
-          @if (authService.isAuthenticated()) {
+          @if (authService.isLoggedIn) {
             <button class="nav-link" (click)="logout()">Déconnexion</button>
           } @else {
             <button matButton [routerLink]="['/login']">Connexion</button>
@@ -35,6 +35,6 @@ export class App {
   authService = inject(AuthService);
 
   logout() {
-    this.authService.logout();
+    this.authService.logOut();
   }
 }

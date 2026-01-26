@@ -1,46 +1,69 @@
-import {Component, inject} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
-import {AuthService} from '../auth/auth';
-import { MatAnchor } from "@angular/material/button";
+import { Component, inject, signal } from '@angular/core';
+import { RouterModule, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../auth/auth';
+import { UserCredentials } from '../models/user-credentials';
+
+// Material
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, MatAnchor],
+  imports: [
+    RouterModule, FormsModule,
+    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule
+  ],
   template: `
-    <section class="auth-container">
-      <h2 class="section-heading">Connexion</h2>
-      <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
-        
-        <label for="username">Nom d'utilisateur</label>
-        <input id="username" type="text" formControlName="username" />
+    <div class="auth-container">
+        <form (submit)="handleSubmit(usernameInput.value, passwordInput.value)" class="auth-form">
+            
+            @if (error()) {
+                <div id="error">
+                    {{ error() }}
+                </div>
+            }
 
-        <label for="password">Mot de passe</label>
-        <input id="password" type="password" formControlName="password" />
+            <mat-form-field appearance="outline">
+                <mat-label>Username</mat-label>
+                <input #usernameInput matInput>
+            </mat-form-field>
 
-        <button matButton="outlined" type="submit">Se connecter</button>
-      </form>
-      
-      <p class="auth-link">
-        No Account ? <a routerLink="/register">S'inscrire</a>
-      </p>
-    </section>
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input #passwordInput matInput type="password">
+            </mat-form-field>
+
+            <div id="buttons">
+                <button mat-flat-button color="primary">Log in</button>
+                <a mat-button routerLink="/register">Create an account!</a>
+            </div>
+        </form>
+    </div>
   `,
-  styleUrls: ['./login.css'],
+  styleUrls: ['./login.css'] 
 })
 export class Login {
-  authService = inject(AuthService);
-  router = inject(Router);
+    private readonly router = inject(Router);
+    private readonly auth = inject(AuthService);
 
-  loginForm = new FormGroup({
-    username: new FormControl(''),
-    password: new FormControl(''),
-  });
+    error = signal<string | null>(null);
 
-  submitLogin() {
-    // On connecte l'utilisateur directement, sans vérifier les champs
-    this.authService.login(this.loginForm.value.username ?? '');
-    this.router.navigate(['/']);
-  }
+    handleSubmit(username: string, password: string) {
+        event?.preventDefault(); 
+
+        const credentials = new UserCredentials({ username, password });
+
+        this.auth.logIn(credentials).subscribe( success => {
+            if (success) {
+                this.router.navigate(['/']);
+            }
+            else {
+                this.error.set('Invalid credentials');
+            }
+        });
+    }
 }

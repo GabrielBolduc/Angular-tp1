@@ -3,28 +3,27 @@
 }
 
 header {
-  display: flex; /* Flexbox pour aligner Logo et Navigation */
+  display: flex; 
   justify-content: space-between;
   align-items: center;
   min-height: 60px;
   padding: var(--content-padding);
   box-shadow: 0px 5px 25px var(--shadow-color);
-  flex-wrap: wrap; /* Permet aux éléments de passer à la ligne si nécessaire */
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .brand-logo {
-  height: 40px; /* Taille fixe pour éviter les déformations */
+  height: 40px;
   width: auto;
 }
 
 .content {
   padding: var(--content-padding);
-  max-width: 1200px; /* Limite la largeur sur les très grands écrans */
-  margin: 0 auto; /* Centre le contenu */
+  max-width: 1200px; 
+  margin: 0 auto; 
 }
 
-/* Styles pour la navigation Auth (ajoutée précédemment) */
 .auth-nav {
   display: flex;
   gap: 15px;
@@ -41,7 +40,6 @@ header {
   font-size: 1rem;
 }
 
-/* Responsive: Sur très petit écran, on centre tout */
 @media (max-width: 450px) {
   header {
     flex-direction: column;
