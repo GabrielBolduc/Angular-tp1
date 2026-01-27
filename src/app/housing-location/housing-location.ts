@@ -17,7 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
         <mat-card-subtitle>{{ housingLocation().city }}, {{ housingLocation().state }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions align="end">
-        <a mat-button color="primary" [routerLink]="['/details', housingLocation().id]">En savoir plus</a>
+        <a mat-button color="primary" [routerLink]="['/details', housingLocation().id]">Learn More</a>
       </mat-card-actions>
     </mat-card>
   `,

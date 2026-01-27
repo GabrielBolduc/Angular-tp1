@@ -1,8 +1,11 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common'; // Important pour AsyncPipe
 import {ActivatedRoute} from '@angular/router';
 import {HousingService} from '../housing';
 import {HousingLocationInfo} from '../housinglocation';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {Observable} from 'rxjs';
+
 // Imports Material
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -12,27 +15,34 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  // Ajout de CommonModule ici est CRUCIAL pour que le pipe | async fonctionne
+  imports: [CommonModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   template: `
     <div class="details-container">
       
-      <mat-card class="listing-card" appearance="outlined">
-        <img mat-card-image [src]="housingLocation?.photo" alt="Photo of {{housingLocation?.name}}">
-        <mat-card-header>
-          <mat-card-title>{{ housingLocation?.name }}</mat-card-title>
-          <mat-card-subtitle>{{ housingLocation?.city }}, {{ housingLocation?.state }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <h2 class="section-heading">About this housing location</h2>
-          
-          <ul>
-            <li>Units available: {{ housingLocation?.availableUnits }}</li>
-            <li>Does this location have wifi: {{ housingLocation?.wifi }}</li>
-            <li>Does this location have laundry: {{ housingLocation?.laundry }}</li>
-          </ul>
+      @if (housingLocation$ | async; as housingLocation) {
+      
+        <mat-card class="listing-card" appearance="outlined">
+          <img mat-card-image [src]="housingLocation.photo" alt="Photo of {{housingLocation.name}}">
+          <mat-card-header>
+            <mat-card-title>{{ housingLocation.name }}</mat-card-title>
+            <mat-card-subtitle>{{ housingLocation.city }}, {{ housingLocation.state }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <h2 class="section-heading">About this housing location</h2>
+            
+            <ul>
+              <li>Units available: {{ housingLocation.availableUnits }}</li>
+              <li>Does this location have wifi: {{ housingLocation.wifi ? 'Yes' : 'No' }}</li>
+              <li>Does this location have laundry: {{ housingLocation.laundry ? 'Yes' : 'No' }}</li>
+            </ul>
 
-        </mat-card-content>
-      </mat-card>
+          </mat-card-content>
+        </mat-card>
+
+      } @else {
+        <p>Loading details...</p>
+      }
 
       <mat-card class="form-card" appearance="outlined">
         <mat-card-header>
@@ -63,19 +73,26 @@ import {MatButtonModule} from '@angular/material/button';
   `,
   styleUrls: ['./details.css'],
 })
-export class Details {
+export class Details implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   housingService = inject(HousingService);
-  housingLocation: HousingLocationInfo | undefined;
+  
+  // On ne stocke plus la donnée brute, mais l'Observable (le tuyau)
+  housingLocation$: Observable<HousingLocationInfo | undefined> | undefined;
+
   applyForm = new FormGroup({
     firstName: new FormControl(''),
     lastName: new FormControl(''),
     email: new FormControl(''),
   });
-  constructor() {
+
+  ngOnInit() {
     const housingLocationId = parseInt(this.route.snapshot.params['id'], 10);
-    this.housingLocation = this.housingService.getHousingLocationById(housingLocationId);
+    
+    // On connecte le tuyau. Le template HTML fera le "subscribe" tout seul grâce à "| async"
+    this.housingLocation$ = this.housingService.getLocationById(housingLocationId);
   }
+
   submitApplication() {
     this.housingService.submitApplication(
       this.applyForm.value.firstName ?? '',

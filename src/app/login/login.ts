@@ -1,18 +1,18 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../auth/auth';
-import { UserCredentials } from '../models/user-credentials';
 
-// Material
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import {AuthService} from '../auth/auth'
+import {UserCredentials} from '../models/user-credentials'
+
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {ErrorStateMatcher} from '@angular/material/core';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [
     RouterModule, FormsModule,
     MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule
@@ -43,27 +43,30 @@ import { MatButtonModule } from '@angular/material/button';
             </div>
         </form>
     </div>
+    
   `,
   styleUrls: ['./login.css'] 
+
+  
 })
 export class Login {
-    private readonly router = inject(Router);
-    private readonly auth = inject(AuthService);
+    private readonly router = inject(Router)
+    private readonly auth = inject(AuthService)
 
-    error = signal<string | null>(null);
+    error = signal<string | null>(null)
 
     handleSubmit(username: string, password: string) {
-        event?.preventDefault(); 
 
-        const credentials = new UserCredentials({ username, password });
+        const credentials = new UserCredentials({ username, password })
 
         this.auth.logIn(credentials).subscribe( success => {
             if (success) {
-                this.router.navigate(['/']);
+                this.router.navigate(['/'])
             }
             else {
-                this.error.set('Invalid credentials');
+                this.error.set('Invalid credentials')
             }
-        });
+        })
+
     }
 }

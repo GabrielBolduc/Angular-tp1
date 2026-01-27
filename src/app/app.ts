@@ -16,10 +16,11 @@ import {MatIconModule} from '@angular/material/icon';
 
         <nav class="auth-nav">
           @if (authService.isLoggedIn) {
-            <button class="nav-link" (click)="logout()">Déconnexion</button>
+            <button matButton class="nav-link" [routerLink]="['/locations']">Locations</button>
+            <button matButton class="nav-link" (click)="logout()">Déconnexion</button>
           } @else {
-            <button matButton [routerLink]="['/login']">Connexion</button>
-            <button matButton [routerLink]="['/register']">Inscription</button>
+            <button matButton [routerLink]="['/login']">Login</button>
+            <button matButton [routerLink]="['/register']">Register</button>
           }
         </nav>
       </header>
