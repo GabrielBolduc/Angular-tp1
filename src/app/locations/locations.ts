@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Important pour les pipes
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
@@ -7,11 +7,11 @@ import { HousingService } from '../housing';
 import { AuthService } from '../auth/auth';
 import { HousingLocationInfo } from '../housinglocation';
 
-import {MatTableModule} from '@angular/material/table';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-locations',
@@ -22,7 +22,8 @@ import {MatInputModule} from '@angular/material/input';
   ],
   template: `
     <div id="header">
-        <h1>My Locations</h1> <a class="add" mat-icon-button routerLink="/locations/new">
+        <h1>My Locations</h1> 
+        <a class="add" mat-icon-button routerLink="/locations/new">
             <mat-icon>add</mat-icon>
         </a>
     </div>
@@ -46,20 +47,24 @@ import {MatInputModule} from '@angular/material/input';
 
         <ng-container matColumnDef="availableUnits">
             <th mat-header-cell *matHeaderCellDef> Units </th>
-            <td mat-cell *matCellDef="let element"> {{element.availableUnits}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.available_units || element.availableUnits}} </td>
         </ng-container>
 
         <ng-container matColumnDef="wifi">
             <th mat-header-cell *matHeaderCellDef>Wifi</th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon class="availability" [attr.available]="element.wifi">{{ availabilityIcon(element.wifi) }}</mat-icon>
+                <mat-icon class="availability" [attr.available]="element.wifi ? 'true' : 'false'">
+                  {{ availabilityIcon(element.wifi) }}
+                </mat-icon>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="laundry">
             <th mat-header-cell *matHeaderCellDef> Laundry </th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon class="availability" [attr.available]="element.laundry">{{ availabilityIcon(element.laundry) }}</mat-icon>
+                <mat-icon class="availability" [attr.available]="element.laundry ? 'true' : 'false'">
+                  {{ availabilityIcon(element.laundry) }}
+                </mat-icon>
             </td>
         </ng-container>
 
@@ -90,63 +95,37 @@ import {MatInputModule} from '@angular/material/input';
         gap: 16px;
     }
 
-    #header mat-icon {
-        margin: 0;
-    }
-
-    .mat-mdc-row {
-        background-color: white;
-        color: var(--mat-on-sys-secondary);
-    }
-
     .mat-mdc-header-row {
-        color: var(--mat-on-sys-secondary);
-        background-color: var(--mat-sys-secondary);
-    }
-
-    .mat-mdc-row:hover .mat-mdc-cell {
-        background-color: color-mix(in lab, var(--mat-sys-secondary) 30%, transparent 100%);
+        background-color: #535c68;
     }
 
     .add {
-        --color: var(--mat-button-filled-label-text-color, var(--mat-sys-on-primary));
-        background-color: var(--mat-sys-surface-tint);
+        background-color: #3498db;
+        color: white;
     }
 
     .edit {
-        --color: rgb(255, 165, 0);
-        background-color: color-mix(in lab, var(--mat-sys-secondary) 30%, transparent 100%);
+        color: orange;
     }
 
-    a[mat-icon-button] {
-        color: var(--color);
-        --mat-icon-button-ripple-color: color-mix(in lab, var(--color) 10%, transparent 100%);
-        --mat-icon-button-hover-state-layer-opacity: .8;
-        --mat-icon-button-state-layer-color: color-mix(in lab, var(--mat-sys-secondary) 100%, transparent 100%);
+    .mat-column-actions, .mat-column-laundry, .mat-column-wifi, .mat-column-availableUnits, .mat-column-state {
+        width: 80px;
+        text-align: center;
     }
 
-    /* CSS existant... */
-    .mat-column-actions, .mat-column-laundry, .mat-column-wifi, mat-column-availableUnits, mat-column-state {
-        width: 0px;
-    }
-    .mat-column-availableUnits, .mat-column-laundry, .mat-column-wifi, .mat-column-state {
-        text-align: center
-    }
-    .availability[available=true] { color: green; }
-    .availability[available=false] { color: red; }
+    /* Ces sélecteurs fonctionnent maintenant car [attr.available] envoie 'true' ou 'false' */
+    .availability[available=true] { color: green !important; }
+    .availability[available=false] { color: red !important; }
   `
 })
 export class LocationsPage implements OnInit {
-    // 1. Injections des services
     private housingService = inject(HousingService);
     private auth = inject(AuthService);
 
     displayedColumns: string[] = ['name', 'city', 'state', 'availableUnits', 'wifi', 'laundry', 'actions'];
     
-    // 2. Variable Observable pour les données dynamiques
     locations$: Observable<HousingLocationInfo[]> = of([]);
 
-    // 3. Chargement au démarrage
     ngOnInit() {
         const userEmail = this.auth.currentUser?.email;
         if (userEmail) {
@@ -154,10 +133,8 @@ export class LocationsPage implements OnInit {
         }
     }
 
-    availabilityIcon(available: boolean | undefined): string | undefined {
-        if( available != undefined ) {
-            return available ? 'check' : 'close';
-        }
-        return undefined;
+    availabilityIcon(available: any): string {
+        // Gère le fait que Martha renvoie 1/0 ou true/false
+        return available ? 'check' : 'close';
     }
 }

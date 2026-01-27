@@ -24,7 +24,6 @@ const authGuard = () => {
 };
 
 const routeConfig: Routes = [
-   
     {
         path: '',
         component: Home,

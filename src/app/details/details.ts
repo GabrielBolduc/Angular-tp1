@@ -31,7 +31,7 @@ import {MatButtonModule} from '@angular/material/button';
             <h2 class="section-heading">About this housing location</h2>
             
             <ul>
-              <li>Units available: {{ housingLocation.availableUnits }}</li>
+              <li>Units available: {{ housingLocation.available_units }}</li>
               <li>Does this location have wifi: {{ housingLocation.wifi ? 'Yes' : 'No' }}</li>
               <li>Does this location have laundry: {{ housingLocation.laundry ? 'Yes' : 'No' }}</li>
             </ul>

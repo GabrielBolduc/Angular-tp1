@@ -1,22 +1,25 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HousingService } from '../housing';
-import { HousingLocationInfo } from '../housinglocation';
-
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSnackBar } from '@angular/material/snack-bar'; 
+import { MatButtonModule } from '@angular/material/button';
+import { HousingService } from '../housing';
+import { HousingLocationInfo } from '../housinglocation';
 
 @Component({
   selector: 'app-location-form',
   standalone: true,
   imports: [
-    ReactiveFormsModule, RouterModule,
-    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatCheckboxModule
+    CommonModule, 
+    ReactiveFormsModule, 
+    RouterLink, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatCheckboxModule, 
+    MatButtonModule
   ],
   template: `
     <h1>{{ isEditMode ? 'Edit Location' : 'New Location' }}</h1>
@@ -55,7 +58,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
                 <div class="small-inputs">
                     <mat-form-field appearance="outline">
                         <mat-label>Units</mat-label>
-                        <input matInput type="number" formControlName="availableUnits" min="0">
+                        <input matInput type="number" formControlName="available_units" min="0">
                     </mat-form-field>
 
                     <mat-checkbox formControlName="wifi">Wifi</mat-checkbox>
@@ -66,7 +69,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
                     @if(isEditMode) {
                         <button type="button" mat-button color="warn" (click)="delete()">Delete</button>
                     } @else {
-                        <span></span> }
+                        <span></span> 
+                    }
 
                     <div class="buttons-right">
                         <button type="button" mat-button routerLink="/locations">Cancel</button>
@@ -156,92 +160,62 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   `
 })
 export class LocationFormPage implements OnInit {
-    private fb = inject(FormBuilder);
-    private housingService = inject(HousingService);
-    private router = inject(Router);
-    private route = inject(ActivatedRoute);
-    private snackBar = inject(MatSnackBar);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private housingService = inject(HousingService);
+  private fb = inject(FormBuilder);
 
-    isEditMode = false;
-    currentId: number | null = null;
+  locationForm: FormGroup;
+  isEditMode = false;
+  locationId?: number;
 
-    // Definiton form avec validation
-    locationForm = this.fb.group({
-        name: ['', Validators.required],
-        city: ['', Validators.required],
-        state: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
-        photo: ['', Validators.required],
-        availableUnits: [0, [Validators.required, Validators.min(0)]],
-        wifi: [false],
-        laundry: [false]
+  constructor() {
+    this.locationForm = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      city: ['', Validators.required],
+      state: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
+      photo: ['', Validators.required],
+      available_units: [0], // Match exact du JSON de Martha
+      wifi: [false],
+      laundry: [false]
     });
+  }
 
-    ngOnInit() {
-        const idParam = this.route.snapshot.paramMap.get('id');
-
-        // Si l'ID existe et n'est pas 'new', on est en mode édition
-        if (idParam && idParam !== 'new') {
-            this.isEditMode = true;
-            this.currentId = Number(idParam);
-            this.loadLocation(this.currentId);
+  ngOnInit(): void {
+    const id = this.route.snapshot.params['id'];
+    if (id) {
+      this.isEditMode = true;
+      this.locationId = Number(id);
+      this.housingService.getLocationById(this.locationId).subscribe(location => {
+        if (location) {
+          this.locationForm.patchValue(location);
         }
+      });
     }
+  }
 
-    // Charge donne pour edit
-    private loadLocation(id: number) {
-        this.housingService.getLocationById(id).subscribe(location => {
-            if (location) {
-                // remplie form avec donne
-                this.locationForm.patchValue(location);
-            } else {
-                // si pas la propriete du user
-                this.snackBar.open('Location not found or access denied', 'Close', { duration: 3000 });
-                this.router.navigate(['/locations']);
-            }
-        });
+  save(): void {
+    if (this.locationForm.invalid) return;
+
+    const locationData = this.locationForm.value;
+
+    if (this.isEditMode) {
+      this.housingService.updateLocation(locationData).subscribe(() => {
+        this.router.navigate(['/locations']);
+      });
+    } else {
+      this.housingService.addLocation(locationData).subscribe(() => {
+        this.router.navigate(['/locations']);
+      });
     }
+  }
 
-    save() {
-        if (this.locationForm.invalid) return;
-
-        const formData = this.locationForm.value as HousingLocationInfo;
-
-        if (this.isEditMode && this.currentId) {
-
-            // edit
-            const locationToUpdate = { ...formData, id: this.currentId };
-            
-            this.housingService.updateLocation(locationToUpdate).subscribe(success => {
-                if (success) {
-                    this.snackBar.open('Location updated successfully!', 'OK', { duration: 2000 });
-                    this.router.navigate(['/locations']);
-                } else {
-                    this.snackBar.open('Error updating location.', 'Close');
-                }
-            });
-        } else {
-            // add
-            this.housingService.addLocation(formData).subscribe(success => {
-                if (success) {
-                    this.snackBar.open('Location created successfully!', 'OK', { duration: 2000 });
-                    this.router.navigate(['/locations']);
-                } else {
-                    this.snackBar.open('Error creating location.', 'Close');
-                }
-            });
-        }
+  delete(): void {
+    if (this.locationId && confirm('Are you sure?')) {
+      this.housingService.deleteLocation(this.locationId).subscribe(() => {
+        this.router.navigate(['/locations']);
+      });
     }
-
-    delete() {
-        if (this.currentId && confirm('Are you sure you want to delete this location?')) {
-            this.housingService.deleteLocation(this.currentId).subscribe(success => {
-                if (success) {
-                    this.snackBar.open('Location deleted.', 'OK', { duration: 2000 });
-                    this.router.navigate(['/locations']);
-                } else {
-                    this.snackBar.open('Error deleting location.', 'Close');
-                }
-            });
-        }
-    }
+  }
 }
