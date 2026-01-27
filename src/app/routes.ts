@@ -24,7 +24,7 @@ const authGuard = () => {
 };
 
 const routeConfig: Routes = [
-    // Routes Publiques
+   
     {
         path: '',
         component: Home,

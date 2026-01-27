@@ -1,5 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Important pour les pipes
 import { RouterModule } from '@angular/router';
+import { Observable, of } from 'rxjs';
+
+import { HousingService } from '../housing';
+import { AuthService } from '../auth/auth';
+import { HousingLocationInfo } from '../housinglocation';
 
 import {MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
@@ -9,20 +15,19 @@ import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-locations',
+  standalone: true,
   imports: [
-    RouterModule,
+    CommonModule, RouterModule,
     MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatTableModule,
   ],
   template: `
     <div id="header">
-        <h1>Locations</h1>
-
-        <a class="add" matIconButton routerLink="/locations/new">
+        <h1>My Locations</h1> <a class="add" mat-icon-button routerLink="/locations/new">
             <mat-icon>add</mat-icon>
         </a>
     </div>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <table mat-table [dataSource]="locations$" class="mat-elevation-z8">
 
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -61,7 +66,7 @@ import {MatInputModule} from '@angular/material/input';
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
-                <a class="edit" matIconButton>
+                <a class="edit" mat-icon-button [routerLink]="['/locations', element.id]">
                     <mat-icon>edit</mat-icon>
                 </a>
             </td>
@@ -70,6 +75,12 @@ import {MatInputModule} from '@angular/material/input';
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    
+    @if ((locations$ | async)?.length === 0) {
+        <p style="padding: 20px; text-align: center; color: gray;">
+            You haven't added any locations yet.
+        </p>
+    }
   `,
   styles: `
     #header {
@@ -99,7 +110,6 @@ import {MatInputModule} from '@angular/material/input';
 
     .add {
         --color: var(--mat-button-filled-label-text-color, var(--mat-sys-on-primary));
-
         background-color: var(--mat-sys-surface-tint);
     }
 
@@ -108,76 +118,46 @@ import {MatInputModule} from '@angular/material/input';
         background-color: color-mix(in lab, var(--mat-sys-secondary) 30%, transparent 100%);
     }
 
-    a[matIconButton] {
+    a[mat-icon-button] {
         color: var(--color);
-
-        /* https://www.fusonic.net/en/blog/angular-material-customization */
         --mat-icon-button-ripple-color: color-mix(in lab, var(--color) 10%, transparent 100%);
         --mat-icon-button-hover-state-layer-opacity: .8;
         --mat-icon-button-state-layer-color: color-mix(in lab, var(--mat-sys-secondary) 100%, transparent 100%);
     }
 
+    /* CSS existant... */
     .mat-column-actions, .mat-column-laundry, .mat-column-wifi, mat-column-availableUnits, mat-column-state {
         width: 0px;
     }
-
     .mat-column-availableUnits, .mat-column-laundry, .mat-column-wifi, .mat-column-state {
         text-align: center
     }
-
-    .availability[available=true] {
-      color: green;
-    }
-
-    .availability[available=false] {
-      color: red;
-    }
+    .availability[available=true] { color: green; }
+    .availability[available=false] { color: red; }
   `
 })
-export class LocationsPage {
+export class LocationsPage implements OnInit {
+    // 1. Injections des services
+    private housingService = inject(HousingService);
+    private auth = inject(AuthService);
+
     displayedColumns: string[] = ['name', 'city', 'state', 'availableUnits', 'wifi', 'laundry', 'actions'];
+    
+    // 2. Variable Observable pour les données dynamiques
+    locations$: Observable<HousingLocationInfo[]> = of([]);
 
-  readonly baseUrl = 'https://angular.dev/assets/images/tutorials/common';
-   dataSource = [
-    {
-      id: 0,
-      name: 'Acme Fresh Start Housing',
-      city: 'Chicago',
-      state: 'IL',
-      photo: `${this.baseUrl}/bernard-hermant-CLKGGwIBTaY-unsplash.jpg`,
-      availableUnits: 4,
-      wifi: true,
-      laundry: true,
-    },
-    {
-      id: 1,
-      name: 'A113 Transitional Housing',
-      city: 'Santa Monica',
-      state: 'CA',
-      photo: `${this.baseUrl}/brandon-griggs-wR11KBaB86U-unsplash.jpg`,
-      availableUnits: 0,
-      wifi: false,
-      laundry: true,
-    },
-    {
-      id: 2,
-      name: 'Warm Beds Housing Support',
-      city: 'Juneau',
-      state: 'AK',
-      photo: `${this.baseUrl}/i-do-nothing-but-love-lAyXdl1-Wmc-unsplash.jpg`,
-      availableUnits: 1,
-      wifi: false,
-      laundry: false,
-    },
-  ]
-
-  availabilityIcon(available: boolean | undefined): string | undefined {
-
-        if( available != undefined ) {
-            return available ? 'check' : 'close'
+    // 3. Chargement au démarrage
+    ngOnInit() {
+        const userEmail = this.auth.currentUser?.email;
+        if (userEmail) {
+            this.locations$ = this.housingService.getLocations(userEmail);
         }
+    }
 
-        return undefined
-  }
-
+    availabilityIcon(available: boolean | undefined): string | undefined {
+        if( available != undefined ) {
+            return available ? 'check' : 'close';
+        }
+        return undefined;
+    }
 }

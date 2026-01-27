@@ -1,11 +1,10 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common'; // Important pour AsyncPipe
+import {CommonModule} from '@angular/common'; 
 import {HousingLocation} from '../housing-location/housing-location';
 import {HousingService} from '../housing';
 import {HousingLocationInfo} from '../housinglocation';
 import {ActivatedRoute, Router} from '@angular/router';
 
-// RxJS Imports
 import {Observable, combineLatest} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 
@@ -64,28 +63,23 @@ export class Home implements OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
 
-  // C'est notre flux principal qui contient la liste finale à afficher
   filteredLocationList$: Observable<HousingLocationInfo[]> | undefined;
   
   currentSearchTerm = '';
 
   ngOnInit() {
-    // 1. Le flux des données (API)
     const locations$ = this.housingService.getLocations(null);
 
-    // 2. Le flux de la recherche (URL)
+    // recherche (url)
     const searchTerm$ = this.route.queryParams.pipe(
       map(params => params['search'] || ''),
-      startWith('') // Pour s'assurer qu'il y a une valeur au départ
+      startWith('') 
     );
 
-    // 3. On combine les deux !
-    // Dès que l'un des deux change, le code ci-dessous s'exécute
     this.filteredLocationList$ = combineLatest([locations$, searchTerm$]).pipe(
       map(([locations, term]) => {
-        this.currentSearchTerm = term; // Mise à jour pour l'input HTML
+        this.currentSearchTerm = term; 
         
-        // Logique de filtre
         if (!term) return locations;
         return locations.filter(l => 
           l.city.toLowerCase().includes(term.toLowerCase())

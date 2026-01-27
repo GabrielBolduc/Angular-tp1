@@ -3,6 +3,8 @@ import {HousingLocationInfo} from './housinglocation';
 import {MarthaRequestService} from './services/MarthaRequestService';
 import {AuthService} from './auth/auth';
 import {map, Observable, of} from 'rxjs';
+import {z} from 'zod';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,62 +13,77 @@ export class HousingService {
   private martha = inject(MarthaRequestService);
   private auth = inject(AuthService);
 
-  // Convertit le format DB (snake_case) vers le format App (camelCase)
-  private mapToHousingLocation(data: any): HousingLocationInfo {
-    return {
-      id: data.id,
-      name: data.name,
-      city: data.city,
-      state: data.state,
-      photo: data.photo,
-      availableUnits: data.available_units, // Mapping important ici
-      wifi: Boolean(data.wifi),             // Conversion 1/0 -> true/false
-      laundry: Boolean(data.laundry)
-    };
-  }
+  private LocationSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    city: z.string(),
+    state: z.string(),
+    photo: z.string(),
 
-  // LISTE (READ)
-  // email: null => Public (Home)
-  // email: string => Privé (LocationsPage)
+    available_units: z.number().transform(val => val),
+    wifi: z.number().or(z.boolean()).transform(Boolean),
+    laundry: z.number().or(z.boolean()).transform(Boolean)
+  }).transform(data => ({
+    id: data.id,
+    name: data.name,
+    city: data.city,
+    state: data.state,
+    photo: data.photo,
+    availableUnits: data.available_units,
+    wifi: data.wifi,
+    laundry: data.laundry
+  }))
+
   getLocations(email: string | null = null): Observable<HousingLocationInfo[]> {
-    // Subtilité Martha : Pour le SELECT, si l'email existe, il faut le wrapper de quotes simples
-    // car la requête SQL est: coalesce(?email, ...) sans quotes.
-    const payloadEmail = email ? `'${email}'` : null;
+    
+    let payloadEmail = null;
+    if (email) {
+        payloadEmail = `'${email}'`;
+    }
 
     return this.martha.select('select-locations', { email: payloadEmail }).pipe(
       map(rows => {
         if (!rows) return [];
-        return rows.map((row: any) => this.mapToHousingLocation(row));
+        return rows.map((row: any) => this.LocationSchema.parse(row));
       })
     );
   }
 
-  // DETAIL (READ SECURISE)
-  // Utilise l'email pour vérifier que l'utilisateur est bien le propriétaire
+  // Select
   getLocationById(id: number): Observable<HousingLocationInfo | undefined> {
     const email = this.auth.currentUser?.email;
-    // Même subtilité pour le SELECT : on ajoute les quotes simples
-    const payloadEmail = email ? `'${email}'` : null;
+    
+    let payloadEmail = null;
+    if (email) {
+        payloadEmail = `'${email}'`;
+    }
 
     return this.martha.select('select-location', { id, email: payloadEmail }).pipe(
       map(rows => {
         if (!rows || rows.length === 0) return undefined;
-        return this.mapToHousingLocation(rows[0]);
+        return this.LocationSchema.parse(rows[0]);
       })
     );
   }
 
-  // CREATE
+  // Create
   addLocation(location: Partial<HousingLocationInfo>): Observable<boolean> {
+    const email = this.auth.currentUser?.email;
+
+    if (!email) {
+        console.error("Erreur: Utilisateur non connecté");
+        return of(false);
+    }
+
     const payload = {
       name: location.name,
       city: location.city,
       state: location.state,
       photo: location.photo,
       units: location.availableUnits,
-      wifi: location.wifi, 
-      laundry: location.laundry,
-      email: this.auth.currentUser?.email // Pas de quotes ici, le SQL a déjà "?email"
+      wifi: location.wifi ? 1 : 0,  
+      laundry: location.laundry ? 1 : 0,
+      email: email // Email brut
     };
 
     return this.martha.insert('insert-location', payload).pipe(
@@ -74,8 +91,10 @@ export class HousingService {
     );
   }
 
-  // UPDATE
+  // Update
   updateLocation(location: HousingLocationInfo): Observable<boolean> {
+    const email = this.auth.currentUser?.email;
+
     const payload = {
       id: location.id,
       name: location.name,
@@ -83,9 +102,9 @@ export class HousingService {
       state: location.state,
       photo: location.photo,
       units: location.availableUnits,
-      wifi: location.wifi,
-      laundry: location.laundry,
-      email: this.auth.currentUser?.email // Pas de quotes ici
+      wifi: location.wifi ? 1 : 0,
+      laundry: location.laundry ? 1 : 0,
+      email: email // Email brut
     };
 
     return this.martha.statement('update-location', payload).pipe(
@@ -93,17 +112,18 @@ export class HousingService {
     );
   }
 
-  // DELETE
+  // Delete
   deleteLocation(id: number): Observable<boolean> {
     const payload = {
       id: id,
-      email: this.auth.currentUser?.email // Pas de quotes ici
+      email: this.auth.currentUser?.email // Email brut
     };
     return this.martha.statement('delete-location', payload).pipe(
         map(success => !!success)
     );
   }
 
+  
   submitApplication(firstName: string, lastName: string, email: string) {
     console.log(`Homes application received: firstName: ${firstName}, lastName: ${lastName}, email: ${email}.`);
   }

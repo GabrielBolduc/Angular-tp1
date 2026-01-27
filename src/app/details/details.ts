@@ -6,7 +6,6 @@ import {HousingLocationInfo} from '../housinglocation';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 
-// Imports Material
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -15,7 +14,7 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'app-details',
   standalone: true,
-  // Ajout de CommonModule ici est CRUCIAL pour que le pipe | async fonctionne
+
   imports: [CommonModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   template: `
     <div class="details-container">
@@ -40,8 +39,6 @@ import {MatButtonModule} from '@angular/material/button';
           </mat-card-content>
         </mat-card>
 
-      } @else {
-        <p>Loading details...</p>
       }
 
       <mat-card class="form-card" appearance="outlined">
@@ -76,8 +73,7 @@ import {MatButtonModule} from '@angular/material/button';
 export class Details implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   housingService = inject(HousingService);
-  
-  // On ne stocke plus la donnée brute, mais l'Observable (le tuyau)
+  // stock donne dans le pipe (Observable)
   housingLocation$: Observable<HousingLocationInfo | undefined> | undefined;
 
   applyForm = new FormGroup({
@@ -89,7 +85,6 @@ export class Details implements OnInit {
   ngOnInit() {
     const housingLocationId = parseInt(this.route.snapshot.params['id'], 10);
     
-    // On connecte le tuyau. Le template HTML fera le "subscribe" tout seul grâce à "| async"
     this.housingLocation$ = this.housingService.getLocationById(housingLocationId);
   }
 
