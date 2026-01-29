@@ -9,6 +9,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {ErrorStateMatcher} from '@angular/material/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 class ConfirmationMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -26,7 +27,7 @@ class ConfirmationMatcher implements ErrorStateMatcher {
   standalone: true,
   imports: [
     RouterModule, ReactiveFormsModule,
-    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule
+    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, TranslateModule
   ],
   template: `
     <div class="auth-container">
@@ -39,7 +40,7 @@ class ConfirmationMatcher implements ErrorStateMatcher {
             }
 
             <mat-form-field appearance="outline">
-                <mat-label>Username</mat-label>
+                <mat-label>{{'REGISTER.USERNAME' | translate}}</mat-label>
                 <input formControlName="username" matInput>
 
                 @if(usernameControl.hasError('required')) {
@@ -51,13 +52,13 @@ class ConfirmationMatcher implements ErrorStateMatcher {
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-                <mat-label>Password</mat-label>
+                <mat-label>{{'REGISTER.PASSWORD' | translate}}</mat-label>
                 <input formControlName="password" matInput type="password">
                 <mat-error>Please enter a password</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-                <mat-label>Password confirmation</mat-label>
+                <mat-label>{{'REGISTER.PASSWORD_CONFIRMATION' | translate}}</mat-label>
                 <input formControlName="passwordConfirmation" [errorStateMatcher]="confirmationMatcher" matInput type="password">
 
                 @if(passwordConfirmationControl.hasError('required')) {
@@ -69,8 +70,8 @@ class ConfirmationMatcher implements ErrorStateMatcher {
             </mat-form-field>
 
             <div id="buttons">
-                <button mat-flat-button color="primary">Sign up</button>
-                <a mat-button routerLink="/login">Cancel</a>
+                <button mat-flat-button color="primary">{{'REGISTER.SIGNUP_BTN' | translate}}</button>
+                <a mat-button routerLink="/login">{{'REGISTER.CANCEL' | translate}}</a>
             </div>
         </form>
     </div>

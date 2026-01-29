@@ -9,13 +9,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {ErrorStateMatcher} from '@angular/material/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
   imports: [
     RouterModule, FormsModule,
-    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule
+    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, TranslateModule
   ],
   template: `
     <div class="auth-container">
@@ -28,18 +28,18 @@ import {ErrorStateMatcher} from '@angular/material/core';
             }
 
             <mat-form-field appearance="outline">
-                <mat-label>Username</mat-label>
+                <mat-label>{{'LOGIN.USERNAME' | translate}}</mat-label>
                 <input #usernameInput matInput>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-                <mat-label>Password</mat-label>
+                <mat-label>{{'LOGIN.PASSWORD' | translate}}</mat-label>
                 <input #passwordInput matInput type="password">
             </mat-form-field>
 
             <div id="buttons">
-                <button mat-flat-button color="primary">Log in</button>
-                <a mat-button routerLink="/register">Create an account!</a>
+                <button mat-flat-button color="primary">{{'LOGIN.LOGIN_BTN' | translate}}</button>
+                <a mat-button routerLink="/register">{{'LOGIN.CREATE_ACCOUNT_LINK' | translate}}</a>
             </div>
         </form>
     </div>

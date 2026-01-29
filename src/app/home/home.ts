@@ -12,16 +12,16 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-
+import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, HousingLocation, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, HousingLocation, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, TranslateModule],
   template: `
     <section>
       <form class="search-form" (submit)="$event.preventDefault()">
         <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Filter by city</mat-label>
+          <mat-label>{{'HOME.FILTER' | translate }}</mat-label>
           <input matInput type="text" #filter [value]="currentSearchTerm" 
                  (keydown.enter)="updateSearch(filter.value)">
           <mat-icon matSuffix>search</mat-icon>
@@ -29,7 +29,7 @@ import {MatIconModule} from '@angular/material/icon';
         
         <div class="actions">
           <button mat-flat-button color="primary" type="button" (click)="updateSearch(filter.value)">
-            Search
+            {{'HOME.SEARCH' | translate}}
           </button>
           
           <button mat-mini-fab color="primary" type="button" (click)="resetSearch()" 
@@ -41,13 +41,13 @@ import {MatIconModule} from '@angular/material/icon';
       
       @if (filteredLocationList$ | async; as locations) {
         
-        <p class="results-count">{{ locations.length }} Result(s)</p>
+        <p class="results-count">{{ locations.length }} {{'HOME.RESULT' | translate }}</p>
 
         <section class="results">
           @for (housingLocation of locations; track housingLocation.id) {
             <app-housing-location [housingLocation]="housingLocation" />
           } @empty {
-             <p>No housing locations found.</p>
+             <p>{{'HOME.NO_RESULT' | translate}}</p>
           }
         </section>
 

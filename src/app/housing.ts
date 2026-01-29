@@ -32,7 +32,7 @@ export class HousingService {
     const email = this.auth.currentUser?.email;
     if (!email) return of(false);
 
-    // On passe l'objet partiel directement, Martha gère le JSON
+    
     return this.martha.insert('insert-location', { ...location, email }).pipe(
       map(result => result?.success ?? false)
     );

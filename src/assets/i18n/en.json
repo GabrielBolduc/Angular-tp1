@@ -1,0 +1,30 @@
+{
+    "NAV": {
+        "LOCATIONS": "My Locations",
+        "LOGIN": "Login",
+        "LOGOUT": "LOGOUT",
+        "REGISTER": "Register"
+    },
+    "HOME": {
+        "FILTER": "Filter by city",
+        "SEARCH": "Search",
+        "RESULT": "Result",
+        "NO_RESULT": "No housing locations found."
+    },
+    "HOUSING": {
+        "LEARN_MORE": "Learn More"
+    },
+    "LOGIN": {
+        "USERNAME": "Username",
+        "PASSWORD": "Password",
+        "LOGIN_BTN": "Log in",
+        "CREATE_ACCOUNT_LINK": "Create an account"
+    },
+    "REGISTER": {
+        "USERNAME": "Username",
+        "PASSWORD": "Password",
+        "PASSWORD_CONFIRMATION": "Password confirmation",
+        "SIGNUP_BTN": "Sign up",
+        "CANCEL": "Cancel"
+    }
+}

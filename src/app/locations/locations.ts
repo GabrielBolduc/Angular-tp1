@@ -31,27 +31,27 @@ import { MatInputModule } from '@angular/material/input';
     <table mat-table [dataSource]="locations$" class="mat-elevation-z8">
 
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> Name </th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
         </ng-container>
 
         <ng-container matColumnDef="city">
-            <th mat-header-cell *matHeaderCellDef> City </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> City </th>
             <td mat-cell *matCellDef="let element"> {{element.city}} </td>
         </ng-container>
 
         <ng-container matColumnDef="state">
-            <th mat-header-cell *matHeaderCellDef> State </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> State </th>
             <td mat-cell *matCellDef="let element"> {{element.state}} </td>
         </ng-container>
 
         <ng-container matColumnDef="availableUnits">
-            <th mat-header-cell *matHeaderCellDef> Units </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> Units </th>
             <td mat-cell *matCellDef="let element"> {{element.available_units || element.availableUnits}} </td>
         </ng-container>
 
         <ng-container matColumnDef="wifi">
-            <th mat-header-cell *matHeaderCellDef>Wifi</th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef>Wifi</th>
             <td mat-cell *matCellDef="let element">
                 <mat-icon class="availability" [attr.available]="element.wifi ? 'true' : 'false'">
                   {{ availabilityIcon(element.wifi) }}
@@ -60,7 +60,7 @@ import { MatInputModule } from '@angular/material/input';
         </ng-container>
 
         <ng-container matColumnDef="laundry">
-            <th mat-header-cell *matHeaderCellDef> Laundry </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> Laundry </th>
             <td mat-cell *matCellDef="let element">
                 <mat-icon class="availability" [attr.available]="element.laundry ? 'true' : 'false'">
                   {{ availabilityIcon(element.laundry) }}
@@ -112,8 +112,10 @@ import { MatInputModule } from '@angular/material/input';
         width: 80px;
         text-align: center;
     }
+    .col_name{
+        color:white;
+    }
 
-    /* Ces sélecteurs fonctionnent maintenant car [attr.available] envoie 'true' ou 'false' */
     .availability[available=true] { color: green !important; }
     .availability[available=false] { color: red !important; }
   `
@@ -134,7 +136,6 @@ export class LocationsPage implements OnInit {
     }
 
     availabilityIcon(available: any): string {
-        // Gère le fait que Martha renvoie 1/0 ou true/false
         return available ? 'check' : 'close';
     }
 }

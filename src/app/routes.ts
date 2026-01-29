@@ -3,15 +3,14 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './auth/auth';
 
-// Import des composants
 import { Home } from './home/home';
 import { Details } from './details/details';
 import { Login } from './login/login';
 import { Register } from './register/register';
 import { LocationsPage } from './locations/locations';
 import { LocationFormPage } from './locations/location-form';
+import { PageNotFoundComponent } from './page-not-found';
 
-// Guard de sécurité : Empêche l'accès si non connecté
 const authGuard = () => {
     const auth = inject(AuthService);
     const router = inject(Router);
@@ -19,9 +18,18 @@ const authGuard = () => {
     if (auth.isLoggedIn) {
         return true;
     }
-    // Si pas connecté, redirection vers Login
     return router.parseUrl('/login');
 };
+
+const guestGuard = () => {
+    const auth = inject(AuthService)
+    const router = inject(Router)
+
+    if(auth.isLoggedIn){
+        return router.parseUrl('/')
+    }
+    return true
+}
 
 const routeConfig: Routes = [
     {
@@ -37,23 +45,22 @@ const routeConfig: Routes = [
     {
         path: 'login',
         component: Login,
-        title: 'Login'
+        title: 'Login',
+        canActivate: [guestGuard]
     },
     {
         path: 'register',
         component: Register,
-        title: 'Register'
+        title: 'Register',
+        canActivate: [guestGuard]
     },
 
-    // Routes Privées (Propriétaires)
     {
         path: 'locations',
         component: LocationsPage,
         title: 'My Locations',
-        canActivate: [authGuard] // Protection activée
+        canActivate: [authGuard]
     },
-    // IMPORTANT : La route '/new' doit être placée AVANT '/:id'
-    // Sinon Angular pensera que le mot "new" est un ID (ex: id="new")
     {
         path: 'locations/new',
         component: LocationFormPage,
@@ -65,6 +72,11 @@ const routeConfig: Routes = [
         component: LocationFormPage,
         title: 'Edit Location',
         canActivate: [authGuard]
+    },
+    {
+        path: '**',
+        component: PageNotFoundComponent,
+        title: 'Page Not Found'
     }
 ];
 

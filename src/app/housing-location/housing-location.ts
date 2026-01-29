@@ -4,11 +4,11 @@ import {RouterLink} from '@angular/router';
 
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
-
+import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-housing-location',
   standalone: true,
-  imports: [RouterLink, MatCardModule, MatButtonModule],
+  imports: [RouterLink, MatCardModule, MatButtonModule, TranslateModule],
   template: `
     <mat-card class="listing-card" appearance="outlined">
       <img mat-card-image [src]="housingLocation().photo" alt="Exterior photo of {{ housingLocation().name }}">
@@ -17,7 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
         <mat-card-subtitle>{{ housingLocation().city }}, {{ housingLocation().state }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions align="end">
-        <a mat-button color="primary" [routerLink]="['/details', housingLocation().id]">Learn More</a>
+        <a mat-button color="primary" [routerLink]="['/details', housingLocation().id]">{{'HOUSING.LEARN_MORE' | translate}}</a>
       </mat-card-actions>
     </mat-card>
   `,

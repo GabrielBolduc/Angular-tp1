@@ -1,0 +1,30 @@
+{
+    "NAV": {
+        "LOCATIONS": "Mes Propriétés",
+        "LOGIN": "Connexion",
+        "LOGOUT": "Déconnexion",
+        "REGISTER": "S'inscrire"
+    },
+    "HOME": {
+        "FILTER": "Filtrer par ville",
+        "SEARCH": "Rechercher",
+        "RESULT": "Résultat",
+        "NO_RESULT": "Aucun logement trouvé."
+    },
+    "HOUSING": {
+        "LEARN_MORE": "En Savoir Plus"
+    },
+    "LOGIN": {
+        "USERNAME": "Nom d'utilisateur",
+        "PASSWORD": "Mots de passe",
+        "LOGIN_BTN": "Se connecter",
+        "CREATE_ACCOUNT_LINK": "S'inscrire"
+    },
+    "REGISTER": {
+        "USERNAME": "Nom d'utilisateur",
+        "PASSWORD": "Mots de passe",
+        "PASSWORD_CONFIRMATION": "Confirmer votre mots de passe",
+        "SIGNUP_BTN": "S'inscrire",
+        "CANCEL": "Annuler"
+    }
+}

@@ -176,7 +176,7 @@ export class LocationFormPage implements OnInit {
       city: ['', Validators.required],
       state: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
       photo: ['', Validators.required],
-      available_units: [0], // Match exact du JSON de Martha
+      available_units: [0], 
       wifi: [false],
       laundry: [false]
     });
