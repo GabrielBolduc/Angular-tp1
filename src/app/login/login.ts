@@ -43,7 +43,6 @@ import { TranslateModule } from '@ngx-translate/core';
             </div>
         </form>
     </div>
-    
   `,
   styleUrls: ['./login.css'] 
 

@@ -26,5 +26,20 @@
         "PASSWORD_CONFIRMATION": "Password confirmation",
         "SIGNUP_BTN": "Sign up",
         "CANCEL": "Cancel"
+    },
+    "DETAILS": {
+        "ABOUT": "About this housing location",
+        "WIFI": "Does this location have wifi: ",
+        "AVAILABLE": "Units available:",
+        "LAUNDRY": "Does this location have laundry:",
+        "YES": "Yes",
+        "NO": "No"
+    },
+    "FORM": {
+        "APPLY": "Apply now",
+        "FIRST": "First Name",
+        "LAST": "Last Name",
+        "EMAIL": "Email",
+        "APPLY_BTN": "Apply now"
     }
 }

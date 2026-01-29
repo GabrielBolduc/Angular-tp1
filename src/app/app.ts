@@ -5,6 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
+
 @Component({
   selector: 'app-root',
   imports: [RouterLink, RouterOutlet, MatButtonModule, MatIconModule, TranslateModule],
@@ -44,11 +45,26 @@ export class App {
   constructor(){
     this.translate.addLangs(['en', 'fr'])
     this.translate.setFallbackLang('en')
-    this.translate.use('en')
+
+    // persistance de la langue
+    const storedLang = localStorage.getItem('language')
+
+    const browserLang = this.translate.getBrowserLang()
+    const isBrowserLangSupported = browserLang?.match(/en|fr/)
+
+    if(storedLang){ // lang save
+      this.translate.use(storedLang)
+    }else if(isBrowserLangSupported && browserLang){ // lang du browser
+      this.translate.use(browserLang)
+    }else {
+      this.translate.use('en')
+    }
   }
 
   changeLang(lang: string){
     this.translate.use(lang)
+
+    localStorage.setItem('language', lang)
   }
 
   

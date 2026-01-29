@@ -26,5 +26,20 @@
         "PASSWORD_CONFIRMATION": "Confirmer votre mots de passe",
         "SIGNUP_BTN": "S'inscrire",
         "CANCEL": "Annuler"
+    },
+    "DETAILS": {
+        "ABOUT": "À propos de ce logement",
+        "WIFI": "Ce logement dispose-t-il de wifi:",
+        "AVAILABLE": "Unités disponibles :",
+        "LAUNDRY": "Ce logement dispose-t-il d'une laverie:",
+        "YES": "Oui",
+        "NO": "Non"
+    },
+    "FORM": {
+        "APPLY": "Postulez maintenant",
+        "FIRST": "Prénom",
+        "LAST": "Nom de famille",
+        "EMAIL": "Courriel",
+        "APPLY_BTN": "Postulez"
     }
 }

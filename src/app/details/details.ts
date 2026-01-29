@@ -10,12 +10,13 @@ import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-details',
   standalone: true,
 
-  imports: [CommonModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, TranslateModule],
   template: `
     <div class="details-container">
       
@@ -28,12 +29,12 @@ import {MatButtonModule} from '@angular/material/button';
             <mat-card-subtitle>{{ housingLocation.city }}, {{ housingLocation.state }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <h2 class="section-heading">About this housing location</h2>
+            <h2 class="section-heading">{{'DETAILS.ABOUT' | translate}}</h2>
             
             <ul>
-              <li>Units available: {{ housingLocation.available_units }}</li>
-              <li>Does this location have wifi: {{ housingLocation.wifi ? 'Yes' : 'No' }}</li>
-              <li>Does this location have laundry: {{ housingLocation.laundry ? 'Yes' : 'No' }}</li>
+              <li>{{'DETAILS.AVAILABLE' | translate}} {{ housingLocation.available_units }}</li>
+              <li>{{'DETAILS.WIFI' | translate}} {{ (housingLocation.wifi ? 'DETAILS.YES' : 'DETAILS.NO') | translate  }}</li>
+              <li>{{'DETAILS.LAUNDRY' | translate}} {{ (housingLocation.laundry ? 'DETAILS.YES' : 'DETAILS.NO') | translate}}</li>
             </ul>
 
           </mat-card-content>
@@ -43,26 +44,26 @@ import {MatButtonModule} from '@angular/material/button';
 
       <mat-card class="form-card" appearance="outlined">
         <mat-card-header>
-          <mat-card-title>Apply now</mat-card-title>
+          <mat-card-title>{{'FORM.APPLY'| translate}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <form [formGroup]="applyForm" (submit)="submitApplication()" class="apply-form">
             <mat-form-field appearance="outline">
-              <mat-label>First Name</mat-label>
+              <mat-label>{{'FORM.FIRST' | translate}}</mat-label>
               <input matInput formControlName="firstName">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Last Name</mat-label>
+              <mat-label>{{'FORM.LAST' | translate}}</mat-label>
               <input matInput formControlName="lastName">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Email</mat-label>
+              <mat-label>{{'FORM.EMAIL' | translate}}</mat-label>
               <input matInput type="email" formControlName="email">
             </mat-form-field>
 
-            <button mat-raised-button color="primary" type="submit">Apply now</button>
+            <button mat-raised-button color="primary" type="submit">{{'FORM.APPLY_BTN' | translate}}</button>
           </form>
         </mat-card-content>
       </mat-card>
