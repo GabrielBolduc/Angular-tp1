@@ -44,17 +44,17 @@ class ConfirmationMatcher implements ErrorStateMatcher {
                 <input formControlName="username" matInput>
 
                 @if(usernameControl.hasError('required')) {
-                    <mat-error>Please enter a username</mat-error>
+                    <mat-error>{{'REGISTER.USERNAME_ERROR'|translate}}</mat-error>
                 }
                 @else if(usernameControl.hasError('email')) {
-                    <mat-error>Username must be an email</mat-error>
+                    <mat-error>{{'REGISTER.USERNAME_ERROR_2'| translate}}</mat-error>
                 }
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>{{'REGISTER.PASSWORD' | translate}}</mat-label>
                 <input formControlName="password" matInput type="password">
-                <mat-error>Please enter a password</mat-error>
+                <mat-error>{{'REGISTER.PASSWORD_ERROR'|translate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -62,10 +62,10 @@ class ConfirmationMatcher implements ErrorStateMatcher {
                 <input formControlName="passwordConfirmation" [errorStateMatcher]="confirmationMatcher" matInput type="password">
 
                 @if(passwordConfirmationControl.hasError('required')) {
-                    <mat-error>Please enter a password confirmation</mat-error>
+                    <mat-error>{{'REGISTER.PASSWORD_CONFIRMATION_ERROR'|translate}}</mat-error>
                 }
                 @else if(signupForm.hasError('passwordConfirmationMustMatch')) {
-                    <mat-error>Password confirmation must match password</mat-error>
+                    <mat-error>{{'REGISTER.PASSWORD_CONFIRMATION_ERROR_2'|translate}}</mat-error>
                 }
             </mat-form-field>
 

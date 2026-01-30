@@ -1,34 +1,36 @@
 import {
+  MatRippleModule
+} from "./chunk-7SQHESNY.js";
+import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
-  MatRipple,
   RippleRenderer,
   _StructuralStylesLoader,
   defaultRippleAnimationConfig
-} from "./chunk-NL6C6RE3.js";
+} from "./chunk-LPBPHHWF.js";
 import {
   FocusMonitor,
   _animationsDisabled
-} from "./chunk-LJZQ3NKH.js";
+} from "./chunk-DSRROVPN.js";
 import {
   _getEventTarget
-} from "./chunk-ZEKLPN4K.js";
+} from "./chunk-ELGIZVZL.js";
 import "./chunk-GYL4ZMOQ.js";
-import "./chunk-ONF4LMPL.js";
-import "./chunk-GUGIMSVJ.js";
-import "./chunk-V2U7JUXW.js";
-import {
-  BidiModule
-} from "./chunk-GTXJS77O.js";
 import {
   _CdkPrivateStyleLoader
 } from "./chunk-IL5IHZ7H.js";
+import "./chunk-AIEYJCOW.js";
+import "./chunk-3M2WDVWF.js";
+import "./chunk-GUGIMSVJ.js";
 import "./chunk-SDLW4W4K.js";
 import {
   Platform
-} from "./chunk-6YNDQ432.js";
-import "./chunk-2I6GE7ZU.js";
-import "./chunk-SG22FXX7.js";
-import "./chunk-ONWJANIN.js";
+} from "./chunk-DYCYHUVS.js";
+import "./chunk-LV7PM7A2.js";
+import "./chunk-AAQUTPMV.js";
+import "./chunk-JY6MIMYY.js";
+import {
+  BidiModule
+} from "./chunk-GTXJS77O.js";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -439,30 +441,6 @@ var MatIconButton = class _MatIconButton extends MatButtonBase {
   }], () => [], null);
 })();
 var MatIconAnchor = MatIconButton;
-
-// node_modules/@angular/material/fesm2022/_ripple-module-chunk.mjs
-var MatRippleModule = class _MatRippleModule {
-  static ɵfac = function MatRippleModule_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _MatRippleModule)();
-  };
-  static ɵmod = ɵɵdefineNgModule({
-    type: _MatRippleModule,
-    imports: [MatRipple],
-    exports: [MatRipple, BidiModule]
-  });
-  static ɵinj = ɵɵdefineInjector({
-    imports: [BidiModule]
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MatRippleModule, [{
-    type: NgModule,
-    args: [{
-      imports: [MatRipple],
-      exports: [MatRipple, BidiModule]
-    }]
-  }], null, null);
-})();
 
 // node_modules/@angular/material/fesm2022/button.mjs
 var _c02 = ["matButton", ""];

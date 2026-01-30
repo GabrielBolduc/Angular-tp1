@@ -2,7 +2,7 @@
   --content-padding: 10px;
 }
 
-header {
+header.brand-name {
   display: flex; 
   justify-content: space-between;
   align-items: center;
@@ -42,6 +42,12 @@ header {
 
 .spacer {
   flex: 1 1 auto;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espace entre les boutons */
 }
 
 @media (max-width: 450px) {

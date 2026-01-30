@@ -12,17 +12,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-locations',
   standalone: true,
   imports: [
-    CommonModule, RouterModule,
+    CommonModule, RouterModule, TranslateModule,
     MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatTableModule,
   ],
   template: `
     <div id="header">
-        <h1>My Locations</h1> 
+        <h1>{{'LOCATION.LOCATIONS' | translate}}</h1> 
         <a class="add" mat-icon-button routerLink="/locations/new">
             <mat-icon>add</mat-icon>
         </a>
@@ -31,27 +32,27 @@ import { MatInputModule } from '@angular/material/input';
     <table mat-table [dataSource]="locations$" class="mat-elevation-z8">
 
         <ng-container matColumnDef="name">
-            <th class="col_name" mat-header-cell *matHeaderCellDef> Name </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> {{'LOCATION.NAME' | translate}} </th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
         </ng-container>
 
         <ng-container matColumnDef="city">
-            <th class="col_name" mat-header-cell *matHeaderCellDef> City </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> {{'LOCATION.CITY' | translate}} </th>
             <td mat-cell *matCellDef="let element"> {{element.city}} </td>
         </ng-container>
 
         <ng-container matColumnDef="state">
-            <th class="col_name" mat-header-cell *matHeaderCellDef> State </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> {{'LOCATION.STATE' | translate}} </th>
             <td mat-cell *matCellDef="let element"> {{element.state}} </td>
         </ng-container>
 
         <ng-container matColumnDef="availableUnits">
-            <th class="col_name" mat-header-cell *matHeaderCellDef> Units </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> {{'LOCATION.UNITS' | translate}} </th>
             <td mat-cell *matCellDef="let element"> {{element.available_units || element.availableUnits}} </td>
         </ng-container>
 
         <ng-container matColumnDef="wifi">
-            <th class="col_name" mat-header-cell *matHeaderCellDef>Wifi</th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef>{{'LOCATION.WIFI'| translate}}</th>
             <td mat-cell *matCellDef="let element">
                 <mat-icon class="availability" [attr.available]="element.wifi ? 'true' : 'false'">
                   {{ availabilityIcon(element.wifi) }}
@@ -60,7 +61,7 @@ import { MatInputModule } from '@angular/material/input';
         </ng-container>
 
         <ng-container matColumnDef="laundry">
-            <th class="col_name" mat-header-cell *matHeaderCellDef> Laundry </th>
+            <th class="col_name" mat-header-cell *matHeaderCellDef> {{'LOCATION.LAUNDRY' | translate}} </th>
             <td mat-cell *matCellDef="let element">
                 <mat-icon class="availability" [attr.available]="element.laundry ? 'true' : 'false'">
                   {{ availabilityIcon(element.laundry) }}

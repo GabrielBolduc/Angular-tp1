@@ -20,27 +20,48 @@ export class HousingService {
   }
 
   getLocationById(id: number): Observable<HousingLocationInfo | undefined> {
-    const email = this.auth.currentUser?.email;
-    const payloadEmail = email ? `'${email}'` : null;
-
-    return this.martha.select('select-location', { id, email: payloadEmail }).pipe(
+    return this.martha.select('select-location', { id, email: null }).pipe(
       map(rows => (rows && rows.length > 0) ? rows[0] : undefined)
     );
   }
-
   addLocation(location: Partial<HousingLocationInfo>): Observable<boolean> {
     const email = this.auth.currentUser?.email;
     if (!email) return of(false);
 
+    const payload = {
+      id: location.id,
+      name: location.name,
+      city: location.city,
+      state: location.state,
+      photo: location.photo,
+      units: location.available_units,
+      wifi: location.wifi,
+      laundry: location.laundry,
+      email: email,
+    }
     
-    return this.martha.insert('insert-location', { ...location, email }).pipe(
+    return this.martha.insert('insert-location', { payload }).pipe(
       map(result => result?.success ?? false)
     );
   }
 
   updateLocation(location: HousingLocationInfo): Observable<boolean> {
     const email = this.auth.currentUser?.email;
-    return this.martha.statement('update-location', { ...location, email }).pipe(
+    
+    const payload = {
+      id: location.id,
+      name: location.name,
+      city: location.city,
+      state: location.state,
+      photo: location.photo,
+      units: location.available_units, 
+      
+      wifi: location.wifi,
+      laundry: location.laundry,
+      email: email,
+    };
+
+    return this.martha.statement('update-location', payload).pipe(
       map(success => !!success)
     );
   }

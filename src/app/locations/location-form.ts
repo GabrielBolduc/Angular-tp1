@@ -8,6 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { HousingService } from '../housing';
 import { HousingLocationInfo } from '../housinglocation';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-location-form',
@@ -19,76 +20,75 @@ import { HousingLocationInfo } from '../housinglocation';
     MatFormFieldModule, 
     MatInputModule, 
     MatCheckboxModule, 
-    MatButtonModule
+    MatButtonModule,
+    TranslateModule
   ],
   template: `
-    <h1>{{ isEditMode ? 'Edit Location' : 'New Location' }}</h1>
+    <h1>{{ (isEditMode ? 'LOFORM.EDIT' : 'LOFORM.NEW') | translate }}</h1>
     
     <form [formGroup]="locationForm" (ngSubmit)="save()">
         <div id="layout">
             <div id="inputs">
                 
                 <mat-form-field appearance="outline">
-                    <mat-label>Name</mat-label>
+                    <mat-label>{{'LOFORM.NAME'| translate}}</mat-label>
                     <input matInput formControlName="name">
                     @if (locationForm.get('name')?.hasError('required')) {
-                        <mat-error>Name is required</mat-error>
+                        <mat-error>{{'LOFORM.NAME_ERROR'|translate}}</mat-error>
                     }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>City</mat-label>
+                    <mat-label>{{'LOFORM.CITY' | translate}}</mat-label>
                     <input matInput formControlName="city">
                     @if (locationForm.get('city')?.hasError('required')) {
-                        <mat-error>City is required</mat-error>
+                        <mat-error>{{'LOFORM.CITY_ERROR'| translate}}</mat-error>
                     }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>State (Ex: CA)</mat-label>
+                    <mat-label>{{'LOFORM.STATE' | translate}}</mat-label>
                     <input matInput formControlName="state" maxlength="2">
                     @if (locationForm.get('state')?.hasError('required')) {
-                        <mat-error>State is required</mat-error>
+                        <mat-error>{{'LOFORM.STATE_ERROR' | translate}}</mat-error>
                     }
                     @if (locationForm.get('state')?.hasError('minlength') || locationForm.get('state')?.hasError('maxlength')) {
-                        <mat-error>Must be 2 characters</mat-error>
+                        <mat-error>{{'LOFORM.STATE_ERROR_2' | translate}}</mat-error>
                     }
                 </mat-form-field>
 
                 <div class="small-inputs">
                     <mat-form-field appearance="outline">
-                        <mat-label>Units</mat-label>
+                        <mat-label>{{'LOFORM.UNITS'|translate}}</mat-label>
                         <input matInput type="number" formControlName="available_units" min="0">
                     </mat-form-field>
 
-                    <mat-checkbox formControlName="wifi">Wifi</mat-checkbox>
-                    <mat-checkbox formControlName="laundry">Laundry</mat-checkbox>
+                    <mat-checkbox formControlName="wifi">{{'LOFORM.WIFI'|translate}}</mat-checkbox>
+                    <mat-checkbox formControlName="laundry">{{'LOFORM.LAUNDRY'|translate}}</mat-checkbox>
                 </div>
 
                 <div class="buttons-all">
                     @if(isEditMode) {
-                        <button type="button" mat-button color="warn" (click)="delete()">Delete</button>
+                        <button type="button" mat-button color="warn" (click)="delete()">{{'LOFORM.DELETE'|translate}}</button>
                     } @else {
                         <span></span> 
                     }
 
                     <div class="buttons-right">
-                        <button type="button" mat-button routerLink="/locations">Cancel</button>
-                        <button type="submit" mat-flat-button color="primary" [disabled]="locationForm.invalid">Save</button>
+                        <button type="button" mat-button routerLink="/locations">{{'LOFORM.CANCEL'|translate}}</button>
+                        <button type="submit" mat-flat-button color="primary" [disabled]="locationForm.invalid">{{'LOFORM.SAVE'|translate}}</button>
                     </div>
                 </div>
             </div>
 
             <div id="photo">
-                <img [src]="locationForm.get('photo')?.value || 'https://placehold.co/600x400?text=No+Image'" 
-                     alt="Location preview"
-                     onerror="this.src='https://placehold.co/600x400?text=Invalid+URL'">
+                <img [src]="locationForm.get('photo')?.value">
 
                 <mat-form-field appearance="outline">
-                    <mat-label>Image URL</mat-label>
+                    <mat-label>{{'LOFORM.IMAGE'|translate}}</mat-label>
                     <input matInput formControlName="photo">
                     @if (locationForm.get('photo')?.hasError('required')) {
-                        <mat-error>Image URL is required</mat-error>
+                        <mat-error>{{'LOFORM.IMAGE_ERROR'|translate}}</mat-error>
                     }
                 </mat-form-field>
             </div>

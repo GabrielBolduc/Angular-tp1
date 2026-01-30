@@ -1,18 +1,18 @@
 import {
   trustedHTMLFromString
 } from "./chunk-GYL4ZMOQ.js";
+import "./chunk-IL5IHZ7H.js";
 import {
   DomSanitizer
-} from "./chunk-V2U7JUXW.js";
+} from "./chunk-3M2WDVWF.js";
+import {
+  HttpClient
+} from "./chunk-LV7PM7A2.js";
+import "./chunk-AAQUTPMV.js";
+import "./chunk-JY6MIMYY.js";
 import {
   BidiModule
 } from "./chunk-GTXJS77O.js";
-import "./chunk-IL5IHZ7H.js";
-import {
-  HttpClient
-} from "./chunk-2I6GE7ZU.js";
-import "./chunk-SG22FXX7.js";
-import "./chunk-ONWJANIN.js";
 import {
   ChangeDetectionStrategy,
   Component,

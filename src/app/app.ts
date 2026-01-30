@@ -4,31 +4,49 @@ import {AuthService} from './auth/auth';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-
+import {MatMenuModule} from '@angular/material/menu';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterLink, RouterOutlet, MatButtonModule, MatIconModule, TranslateModule],
+  imports: [RouterLink, RouterOutlet, MatButtonModule, MatIconModule, TranslateModule, MatMenuModule],
   template: `
     <main>
       <header class="brand-name">
-        <a matButton [routerLink]="['/']">
+        <a mat-button [routerLink]="['/']" class="logo-link">
           <img class="brand-logo" src="/public/logo.svg" alt="logo" aria-hidden="true" />
         </a>
 
         <span class="spacer"></span>
-        <button mat-button (click)="changeLang('en')">EN</button>
-        <button mat-button (click)="changeLang('fr')">FR</button>
 
-        <nav class="auth-nav">
-          @if (authService.isLoggedIn) {
-            <button matButton class="nav-link" [routerLink]="['/locations']">{{ 'NAV.LOCATIONS' | translate}}</button>
-            <button matButton class="nav-link" (click)="logout()" [routerLink]="['/']">{{'NAV.LOGOUT' | translate}}</button>
-          } @else {
-            <button matButton [routerLink]="['/login']">{{'NAV.LOGIN' | translate}}</button>
-            <button matButton [routerLink]="['/register']">{{'NAV.REGISTER' | translate}}</button>
-          }
-        </nav>
+        <div class="nav-right">
+          
+          <button mat-button [matMenuTriggerFor]="langMenu">
+            <mat-icon>language</mat-icon>
+            <span class="lang-text">{{ translate.currentLang.toUpperCase()}}</span>
+          </button>
+          
+          <mat-menu #langMenu="matMenu">
+            <button mat-menu-item (click)="changeLang('en')">English</button>
+            <button mat-menu-item (click)="changeLang('fr')">Français</button>
+          </mat-menu>
+
+          <nav class="auth-nav">
+            @if (authService.isLoggedIn) {
+              <a mat-button [routerLink]="['/locations']">
+                 <mat-icon>home</mat-icon> 
+                 <span class="nav-text">{{ 'NAV.LOCATIONS' | translate}}</span>
+              </a>
+              <button mat-button (click)="logout()">
+                 <mat-icon>logout</mat-icon>
+                 <span class="nav-text">{{'NAV.LOGOUT' | translate}}</span>
+              </button>
+            } @else {
+              <a mat-button [routerLink]="['/login']">{{'NAV.LOGIN' | translate}}</a>
+              <a mat-button [routerLink]="['/register']">{{'NAV.REGISTER' | translate}}</a>
+            }
+          </nav>
+        </div>
+
       </header>
       <section class="content">
         <router-outlet />

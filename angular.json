@@ -52,7 +52,10 @@
               "src/material-theme.scss",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "ts-json-object"
+            ]
           },
           "configurations": {
             "production": {
